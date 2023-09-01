@@ -1,0 +1,19 @@
+{
+	"name": "broken-gm-bot-characters",
+	"type": "module",
+	"version": "2.0.1",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"update": "node updateCommands.js",
+		"start": "node index.js"
+	},
+	"license": "MIT",
+	"dependencies": {
+		"@discordjs/opus": "^0.9.0",
+		"discord-player": "^6.6.2",
+		"discord.js": "^14.13.0",
+		"dotenv": "^16.0.2",
+		"ytdl-core": "^4.11.5"
+	}
+}
