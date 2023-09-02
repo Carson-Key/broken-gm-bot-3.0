@@ -3,7 +3,7 @@ import axios from 'axios';
 import { toS3AsStream } from "./aws/s3.js"
 
 export const uploadVoiceToS3 = async (text, { id, model_id, stability, similarity_boost }) => {
-    let fileName = "Error"
+    let returnObject = { message: "Error Occurred" }
 
     const res = await axios({
         method: 'POST',
@@ -24,16 +24,25 @@ export const uploadVoiceToS3 = async (text, { id, model_id, stability, similarit
         responseType: 'stream'
     });
 
-    const { writeStream, promise } = toS3AsStream({Bucket: "broken-gm-bot-characters-mp3s", Key: `${id}-${uuidv4()}.mp3`});
+    const { 
+        writeStream, 
+        promise 
+    } = toS3AsStream({
+        Bucket: "broken-gm-bot-characters-mp3s", 
+        Key: `${id}-${uuidv4()}.mp3`
+    });
     res.data.pipe(writeStream);
 
     try {
         const returnFromS3 = await promise;
-        console.log(`upload completed successfully: ${JSON.stringify(returnFromS3)}`);
-        fileName = {bucket: returnFromS3.Bucket, key: returnFromS3.Key, url: returnFromS3.Location}
+        returnObject = {
+            bucket: returnFromS3.Bucket, 
+            key: returnFromS3.Key, url: 
+            returnFromS3.Location
+        }
     } catch (error) {
         console.log('upload failed.', error.message);
     }
 
-    return fileName
+    return returnObject
 }

@@ -4,6 +4,7 @@ Transform: AWS::Serverless-2016-10-31
 Globals:
   Function:
     Timeout: 15
+    MemorySize: 512
 
 Resources:
   VoicesRole:
@@ -56,4 +57,4 @@ Resources:
       Runtime: nodejs16.x
       Role: !GetAtt VoicesRole.Arn
       Architectures:
-        - x86_64
+        - arm64

@@ -20,7 +20,10 @@ export const lambdaHandler = async (event, context) => {
             'body': JSON.stringify(s3ObjectInfo)
         }
     } catch (error) {
-        response = error
+        response = {
+            'statusCode': 500,
+            'body': JSON.stringify(error)
+        }
     }
 
     return response
