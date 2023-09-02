@@ -3,13 +3,13 @@ import { transcribeTextToVoice } from '../../helpers/voices.js'
 
 export default {
 	data: new SlashCommandBuilder()
-		.setName('knox')
-		.setDescription('Has the bot say the text you provided in Knox Percival\'s voice')
+		.setName('anime-girl')
+		.setDescription('Has the bot say the text you provided in Anime Girl\'s voice')
         .addStringOption(option =>
 			option
 				.setName('text')
 				.setRequired(true)
-				.setDescription('The text you want Knox to say')),
+				.setDescription('The text you want Anime Girl to say')),
 	async execute(interaction) {
         const text = interaction.options.getString('text', true);
 
@@ -27,10 +27,10 @@ export default {
 
         return await transcribeTextToVoice(
             interaction, 
-            channel,
+            channel, 
             text, 
             {
-                voiceName: "knox"
+                voiceName: "animeGirl"
             }
         )
 	},

@@ -5,14 +5,35 @@ import { camelCaseToWords } from './general.js'
 import path from 'node:path';
 import appRoot from 'app-root-path';
 
-export const transcribeTextToVoice = async (interaction, channel, text, voiceName) => {
+export const transcribeTextToVoice = async (
+    interaction, 
+    channel, 
+    text, 
+    {
+        voiceName,
+        voiceId,
+        stability,
+        similarity
+    }
+) => {
     try {
+        let lambdaPayload = {
+            voiceName,
+            text
+        }
+
+        if (voiceId) {
+            lambdaPayload = {
+                text,
+                voiceName: voiceId,
+                stability,
+                similarity
+            }
+        }
+
         const lambdaResponseBody = await invokeLambda(
             'BrokenGmBotVoices-VoicesFunction-sNiB1Tv6roxv', 
-            { 
-                text,
-                voiceName
-            }
+            lambdaPayload
         )
 
         const fileName = path.join(appRoot.path, 'mp3s', lambdaResponseBody.key);
@@ -37,7 +58,7 @@ export const transcribeTextToVoice = async (interaction, channel, text, voiceNam
         )
 
         return interaction.followUp({ 
-            content: `**Having ${camelCaseToWords(voiceName)} say:** ${text}`, 
+            content: `**Having ${camelCaseToWords(lambdaPayload.voiceName)} say:** ${text}`, 
             ephemeral: true
         });
     } catch (error) {

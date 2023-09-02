@@ -4,7 +4,7 @@
 	"version": "3.0.1",
 	"description": "",
 	"scripts": {
-		"upload-characters": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Characters ubuntu@ec2-54-200-243-24.us-west-2.compute.amazonaws.com:~",
+		"upload-characters": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Characters ubuntu@ec2-54-186-165-203.us-west-2.compute.amazonaws.com:~",
 		"deploy-voices": "cd lambda/BrokenGmBotVoices && sam build && sam deploy && cd ../.."
 	},
 	"license": "MIT",
