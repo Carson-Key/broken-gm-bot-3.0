@@ -31,23 +31,23 @@ Resources:
                   - s3:*
                 Resource:
                   - "*"
-        - PolicyName: VoicesCloudwatchLogsPolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - logs:CreateLogGroup
-                  - logs:CreateLogStream
-                  - logs:PutLogEvents
-                  - logs:PutResourcePolicy
-                  - logs:DeleteResourcePolicy
-                  - logs:FilterLogEvents
-                  - logs:DescribeLogStreams
-                  - logs:DescribeLogStreams
-                  - logs:GetLogEvents
-                Resource:
-                  - "*"
+        # - PolicyName: VoicesCloudwatchLogsPolicy
+        #   PolicyDocument:
+        #     Version: "2012-10-17"
+        #     Statement:
+        #       - Effect: Allow
+        #         Action:
+        #           - logs:CreateLogGroup
+        #           - logs:CreateLogStream
+        #           - logs:PutLogEvents
+        #           - logs:PutResourcePolicy
+        #           - logs:DeleteResourcePolicy
+        #           - logs:FilterLogEvents
+        #           - logs:DescribeLogStreams
+        #           - logs:DescribeLogStreams
+        #           - logs:GetLogEvents
+        #         Resource:
+        #           - "*"
 
   VoicesFunction:
     Type: AWS::Serverless::Function 

@@ -12,7 +12,20 @@ export const lambdaHandler = async (event, context) => {
         })
     }
 
-    const s3ObjectInfo = await uploadVoiceToS3(event.text, voiceMetaData[event.voiceName])
+    const s3ObjectInfo = await uploadVoiceToS3(
+        event.text, 
+        (
+            voiceMetaData[event.voiceName] ? 
+                voiceMetaData[event.voiceName] :
+                {
+                    name: event.voiceName,
+                    id: event.voiceName,
+                    stability: event.stability ? event.stability : 0.75,
+                    similarity_boost: event.similarity_boost ? event.similarity_boost : 0.75,
+                    model_id: "eleven_monolingual_v1",
+                }
+        )
+    )
 
     try {
         response = {
