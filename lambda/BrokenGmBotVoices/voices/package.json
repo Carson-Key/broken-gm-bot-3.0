@@ -1,0 +1,13 @@
+{
+  "name": "voices",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "dependencies": {
+    "aws-sdk": "^2.1450.0",
+    "axios": "^1.4.0",
+    "dotenv": "^16.0.2",
+    "uuid": "^9.0.0"
+  }
+}

@@ -1,0 +1,59 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+  
+Globals:
+  Function:
+    Timeout: 15
+
+Resources:
+  VoicesRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: VoicesRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - apigateway.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: VoicesS3
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - "*"
+        - PolicyName: VoicesCloudwatchLogsPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:PutResourcePolicy
+                  - logs:DeleteResourcePolicy
+                  - logs:FilterLogEvents
+                  - logs:DescribeLogStreams
+                  - logs:DescribeLogStreams
+                  - logs:GetLogEvents
+                Resource:
+                  - "*"
+
+  VoicesFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: voices/
+      Handler: app.lambdaHandler
+      Runtime: nodejs16.x
+      Role: !GetAtt VoicesRole.Arn
+      Architectures:
+        - x86_64
