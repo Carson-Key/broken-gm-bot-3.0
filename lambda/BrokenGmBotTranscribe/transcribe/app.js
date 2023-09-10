@@ -58,9 +58,15 @@ export const lambdaHandler = async (event, context) => {
             const delCommand = new DeleteObjectCommand(params);
             await s3Client.send(delCommand);
 
-            if (transcript.text && transcript.text !== "" && transcript.text !== '.') {
-                console.log(transcript.text)
-
+            if (
+                transcript.text && 
+                transcript.text !== "" && 
+                transcript.text !== '.' && 
+                transcript.text.toLowerCase() !== 'you' && 
+                transcript.text.toLowerCase() !== 'you.' &&
+                transcript.text.toLowerCase() !== 'bye' &&
+                transcript.text.toLowerCase() !== 'bye.'
+            ) {
                 const sqsClient = new SQSClient({
                     region: "us-west-2",
                 });
