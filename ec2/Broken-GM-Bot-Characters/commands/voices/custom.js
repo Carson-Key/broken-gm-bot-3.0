@@ -49,7 +49,8 @@ export default {
             {
                 voiceId,
                 stability,
-                similarity
+                similarity,
+                userName: interaction.member.user.displayName
             }
         )
 	},

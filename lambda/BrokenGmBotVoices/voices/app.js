@@ -1,5 +1,6 @@
 import { uploadVoiceToS3 } from './helpers/elevenLabs.js'
 import { voiceMetaData } from './helpers/constants/voiceMetaData.js'
+import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs"
 import dotenv from 'dotenv'
 
 dotenv.config();
@@ -26,6 +27,18 @@ export const lambdaHandler = async (event, context) => {
                 }
         )
     )
+    const sqsClient = new SQSClient({
+        region: "us-west-2",
+    });
+    const commandToSqs = new SendMessageCommand({
+        QueueUrl: "https://sqs.us-west-2.amazonaws.com/552004519449/TranscribeSqs",
+        MessageBody: JSON.stringify({ 
+            text: event.text,
+            userName: `${event.userName} (${event.voiceName})`,
+            time: Date.now(),
+        })
+    });
+    await sqsClient.send(commandToSqs);
 
     try {
         response = {

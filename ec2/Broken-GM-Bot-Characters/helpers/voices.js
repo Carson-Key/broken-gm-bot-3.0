@@ -11,6 +11,7 @@ export const transcribeTextToVoice = async (
     text, 
     {
         voiceName,
+        userName,
         voiceId,
         stability,
         similarity
@@ -19,11 +20,13 @@ export const transcribeTextToVoice = async (
     try {
         let lambdaPayload = {
             voiceName,
-            text
+            text,
+            userName
         }
 
         if (voiceId) {
             lambdaPayload = {
+                userName,
                 text,
                 voiceName: voiceId,
                 stability,

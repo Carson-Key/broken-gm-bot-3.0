@@ -30,7 +30,8 @@ export default {
             channel, 
             text, 
             {
-                voiceName: "animeGirl"
+                voiceName: "animeGirl",
+                userName: interaction.member.user.displayName
             }
         )
 	},

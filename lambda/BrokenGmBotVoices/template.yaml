@@ -31,6 +31,15 @@ Resources:
                   - s3:*
                 Resource:
                   - "*"
+        - PolicyName: VoicesSQS
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:*
+                Resource:
+                  - "*"
         # - PolicyName: VoicesCloudwatchLogsPolicy
         #   PolicyDocument:
         #     Version: "2012-10-17"

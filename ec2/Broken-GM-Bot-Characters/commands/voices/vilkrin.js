@@ -30,7 +30,8 @@ export default {
             channel, 
             text, 
             {
-                voiceName: "vilkrin"
+                voiceName: "vilkrin",
+                userName: interaction.member.displayName
             }
         )
 	},
