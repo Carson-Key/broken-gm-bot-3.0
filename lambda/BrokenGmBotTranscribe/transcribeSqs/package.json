@@ -1,0 +1,11 @@
+{
+  "name": "voices",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "firebase-admin": "^11.10.1"
+  }
+}

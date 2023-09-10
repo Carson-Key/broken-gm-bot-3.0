@@ -1,0 +1,119 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+  
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 512
+
+Resources:
+  TranscribeRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: TranscribeRole
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - lambda.amazonaws.com
+                - apigateway.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Policies:
+        - PolicyName: TranscribeS3
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - s3:*
+                Resource:
+                  - "*"
+        - PolicyName: TranscribeSQS
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - sqs:*
+                Resource:
+                  - "*"
+        - PolicyName: TranscribeCloudwatchLogsPolicy
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - logs:CreateLogGroup
+                  - logs:CreateLogStream
+                  - logs:PutLogEvents
+                  - logs:PutResourcePolicy
+                  - logs:DeleteResourcePolicy
+                  - logs:FilterLogEvents
+                  - logs:DescribeLogStreams
+                  - logs:DescribeLogStreams
+                  - logs:GetLogEvents
+                Resource:
+                  - "*"
+
+  AudioFileBucket:
+    Type: AWS::S3::Bucket
+    DependsOn:
+      - TranscribeFunctionPermission
+    Properties:
+      BucketName: broken-gm-bot-transcribe-wavs
+      NotificationConfiguration:
+        LambdaConfigurations:
+          - Event: s3:ObjectCreated:*
+            Function: !GetAtt TranscribeFunction.Arn
+            Filter:
+              S3Key:
+                Rules:
+                - Name: suffix
+                  Value: .wav
+
+  TranscribeFunctionPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      Action: 'lambda:InvokeFunction'
+      FunctionName: !Ref TranscribeFunction
+      Principal: s3.amazonaws.com
+      SourceArn: arn:aws:s3:::broken-gm-bot-transcribe-wavs
+      SourceAccount: !Ref AWS::AccountId
+
+  TranscribeFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: transcribe/
+      Handler: app.lambdaHandler
+      Runtime: nodejs16.x
+      Role: !GetAtt TranscribeRole.Arn
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          SQS_URL: !Ref TranscribeSqs
+  
+  TranscribeSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: TranscribeSqs
+
+  TranscribeSqsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: transcribeSqs/
+      Handler: app.lambdaHandler
+      Runtime: nodejs16.x
+      Role: !GetAtt TranscribeRole.Arn
+      Architectures:
+        - x86_64
+      Events:
+        TranscribeSqsSQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TranscribeSqs.Arn
+            BatchSize: 1000
+            MaximumBatchingWindowInSeconds: 30
