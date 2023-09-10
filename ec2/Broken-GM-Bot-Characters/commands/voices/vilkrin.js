@@ -31,7 +31,7 @@ export default {
             text, 
             {
                 voiceName: "vilkrin",
-                userName: await interaction.member.displayName
+                userName: await interaction.guild.members.cache.get(interaction.member.id).user.displayName
             }
         )
 	},

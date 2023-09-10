@@ -50,7 +50,7 @@ export default {
                 voiceId,
                 stability,
                 similarity,
-                userName: await interaction.member.user.displayName
+                userName: await interaction.guild.members.cache.get(interaction.member.id).user.displayName
             }
         )
 	},
