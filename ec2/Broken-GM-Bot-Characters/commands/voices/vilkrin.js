@@ -31,7 +31,7 @@ export default {
             text, 
             {
                 voiceName: "vilkrin",
-                userName: interaction.member.displayName
+                userName: await interaction.member.displayName
             }
         )
 	},

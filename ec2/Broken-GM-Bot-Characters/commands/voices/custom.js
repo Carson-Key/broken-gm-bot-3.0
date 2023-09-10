@@ -50,7 +50,7 @@ export default {
                 voiceId,
                 stability,
                 similarity,
-                userName: interaction.member.user.displayName
+                userName: await interaction.member.user.displayName
             }
         )
 	},
