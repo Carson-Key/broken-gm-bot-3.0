@@ -39,7 +39,7 @@ export default {
         const receiver = connection.receiver;
 
         receiver.speaking.on('start', async (userId) => {
-            if (!['938666876131770389'].includes(userId)) {
+            if (!['938666876131770389', '1112063938776010869', '1147591645798350962'].includes(userId)) {
                 const dateObject = Date.now()
             const userName = await interaction.guild.members.cache.get(userId).user.displayName
             const fileName = path.join('.', `${userName}|${dateObject}|${userId}|${uuidv4()}.wav`);
