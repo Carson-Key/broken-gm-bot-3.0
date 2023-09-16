@@ -104,6 +104,7 @@ Resources:
   TranscribeSqsFunction:
     Type: AWS::Serverless::Function
     Properties:
+      Timeout: 60
       CodeUri: transcribeSqs/
       Handler: app.lambdaHandler
       Runtime: nodejs16.x

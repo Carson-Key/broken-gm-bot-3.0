@@ -25,7 +25,7 @@ export const lambdaHandler = async (event, context) => {
 
         for (let i = 0; i < event.Records.length; i += 1) {
             const bucketKeySplitAtPipes = event.Records[i].s3.object.key.split("%7C")
-            const bucketKey = bucketKeySplitAtPipes.join("|")
+            const bucketKey = bucketKeySplitAtPipes.join("|").split("%2B").join("+")
             const bucketName = event.Records[i].s3.bucket.name
             const fileName = `/tmp/${bucketKey}`
             console.log(`Saved To: ${fileName}`)
@@ -70,12 +70,16 @@ export const lambdaHandler = async (event, context) => {
                 const sqsClient = new SQSClient({
                     region: "us-west-2",
                 });
+
                 const commandToSqs = new SendMessageCommand({
                     QueueUrl: process.env.SQS_URL,
                     MessageBody: JSON.stringify({ 
                         text: transcript.text,
                         userName: bucketKeySplitAtPipes[0],
                         time: bucketKeySplitAtPipes[1],
+                        guildId: bucketKeySplitAtPipes[4],
+                        campaignName: bucketKeySplitAtPipes[5].split("%2B").join(" "),
+                        sessionNumber: bucketKeySplitAtPipes[6].split('.')[0],
                     })
                 });
                 await sqsClient.send(commandToSqs);

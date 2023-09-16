@@ -30,15 +30,25 @@ export const lambdaHandler = async (event, context) => {
 
         for (let i = 0; i < event.Records.length; i += 1) {
             const body = JSON.parse(event.Records[i].body)
-            toAddToFireBase[`${body.time}|${body.userName}`] = body.text
+
+            if (!toAddToFireBase[body.guildId]) {
+                toAddToFireBase[body.guildId] = {}
+            }
+            if (!toAddToFireBase[body.guildId][body.campaignName]) {
+                toAddToFireBase[body.guildId][body.campaignName] = {}
+            }
+            if (!toAddToFireBase[body.guildId][body.campaignName][body.sessionNumber]) {
+                toAddToFireBase[body.guildId][body.campaignName][body.sessionNumber] = {}
+            }
+
+            toAddToFireBase[body.guildId][body.campaignName][body.sessionNumber][`${body.time}|${body.userName}`] = body.text
         }
 
-        const date = new Date();
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-        const transcription = db.collection('transcription').doc(`${day}-${month}-${year}`);
-        await transcription.set(toAddToFireBase, { merge: true });
+        const arrayOfGuildIds = Object.keys(toAddToFireBase)
+        for (let i = 0; i < arrayOfGuildIds.length; i += 1) {
+            const transcription = db.collection('transcription').doc(arrayOfGuildIds[i]);
+            await transcription.set(toAddToFireBase[arrayOfGuildIds[i]], { merge: true });
+        }
     } catch (error) {
         console.error(error)
         response = {
