@@ -4,9 +4,9 @@
 	"version": "3.0.1",
 	"description": "",
 	"scripts": {
-		"upload-characters": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Characters ubuntu@ec2-18-246-149-85.us-west-2.compute.amazonaws.com:~",
-		"upload-main": "scp -i MacBook.pem -r ec2/Broken-GM-Bot ubuntu@ec2-18-237-71-19.us-west-2.compute.amazonaws.com:~",
-		"upload-transcribe": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Transcribe ubuntu@ec2-34-219-5-165.us-west-2.compute.amazonaws.com:~",
+		"upload-characters": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Characters ubuntu@ec2-18-237-98-198.us-west-2.compute.amazonaws.com:~",
+		"upload-main": "scp -i MacBook.pem -r ec2/Broken-GM-Bot ubuntu@ec2-35-92-121-164.us-west-2.compute.amazonaws.com:~",
+		"upload-transcribe": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Transcribe ubuntu@ec2-52-32-245-59.us-west-2.compute.amazonaws.com:~",
 		"deploy-voices": "cd lambda/BrokenGmBotVoices && sam build && sam deploy && cd ../..",
 		"deploy-transcribe": "cd lambda/BrokenGmBotTranscribe && sam build && sam deploy && cd ../.."
 	},
