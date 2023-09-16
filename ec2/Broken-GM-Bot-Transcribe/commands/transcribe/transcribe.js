@@ -126,11 +126,6 @@ export default {
             }
         });
 
-        const date = new Date();
-        let day = date.getDate();
-        let month = date.getMonth() + 1;
-        let year = date.getFullYear();
-
-        return interaction.followUp({ content: `Started Trascribing for a session on: ${day}-${month}-${year}`});
+        return interaction.followUp({ content: `Started Trascribing for session ${sessionNumber} of ${campaignName}`});
 	},
 };

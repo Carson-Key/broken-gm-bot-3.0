@@ -6,7 +6,7 @@
 	"scripts": {
 		"upload-characters": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Characters ubuntu@ec2-18-237-98-198.us-west-2.compute.amazonaws.com:~",
 		"upload-main": "scp -i MacBook.pem -r ec2/Broken-GM-Bot ubuntu@ec2-35-92-121-164.us-west-2.compute.amazonaws.com:~",
-		"upload-transcribe": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Transcribe ubuntu@ec2-35-87-36-13.us-west-2.compute.amazonaws.com:~",
+		"upload-transcribe": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Transcribe ubuntu@ec2-34-220-205-155.us-west-2.compute.amazonaws.com:~",
 		"deploy-voices": "cd lambda/BrokenGmBotVoices && sam build && sam deploy && cd ../..",
 		"deploy-transcribe": "cd lambda/BrokenGmBotTranscribe && sam build && sam deploy && cd ../.."
 	},
