@@ -23,7 +23,9 @@ export const lambdaHandler = async (event, context) => {
                     id: event.voiceName,
                     stability: event.stability ? event.stability : 0.75,
                     similarity_boost: event.similarity_boost ? event.similarity_boost : 0.75,
-                    model_id: "eleven_monolingual_v1",
+                    style: 0,
+                    use_speaker_boost: true,
+                    model_id: "eleven_multilingual_v2",
                 }
         )
     )
