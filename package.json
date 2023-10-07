@@ -4,7 +4,7 @@
 	"version": "3.0.1",
 	"description": "",
 	"scripts": {
-		"upload-characters": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Characters ubuntu@ec2-18-237-98-198.us-west-2.compute.amazonaws.com:~",
+		"upload-characters": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Characters ubuntu@ec2-18-236-173-109.us-west-2.compute.amazonaws.com:~",
 		"upload-main": "scp -i MacBook.pem -r ec2/Broken-GM-Bot ubuntu@ec2-35-92-121-164.us-west-2.compute.amazonaws.com:~",
 		"upload-transcribe": "scp -i MacBook.pem -r ec2/Broken-GM-Bot-Transcribe ubuntu@ec2-54-201-89-96.us-west-2.compute.amazonaws.com:~",
 		"deploy-voices": "cd lambda/BrokenGmBotVoices && sam build && sam deploy && cd ../..",
