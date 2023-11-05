@@ -40,6 +40,16 @@ Resources:
                   - sqs:*
                 Resource:
                   - "*"
+        - PolicyName: TranscribeDynamo
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action:
+                  - dynamodb:*
+                  - kms:*
+                Resource:
+                  - "*"
         - PolicyName: TranscribeCloudwatchLogsPolicy
           PolicyDocument:
             Version: "2012-10-17"
@@ -134,7 +144,8 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          SQS_URL: !Ref TranscribeSqs
+          # SQS_URL: !Ref TranscribeSqs
+          SQS_URL: !Ref TranscribeDynamoSqs
   
   TranscribeSqs:
     Type: AWS::SQS::Queue
@@ -157,4 +168,28 @@ Resources:
           Properties:
             Queue: !GetAtt TranscribeSqs.Arn
             BatchSize: 1000
+            MaximumBatchingWindowInSeconds: 30
+  
+  TranscribeDynamoSqs:
+    Type: AWS::SQS::Queue
+    Properties:
+      QueueName: TranscribeDynamoSqs
+      VisibilityTimeout: 60
+
+  TranscribeSqsDynamoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Timeout: 60
+      CodeUri: transcribeSqsDynamo/
+      Handler: app.lambdaHandler
+      Runtime: nodejs16.x
+      Role: !GetAtt TranscribeRole.Arn
+      Architectures:
+        - x86_64
+      Events:
+        TranscribeSqsDynamoSQSEvent:
+          Type: SQS
+          Properties:
+            Queue: !GetAtt TranscribeDynamoSqs.Arn
+            BatchSize: 25
             MaximumBatchingWindowInSeconds: 30

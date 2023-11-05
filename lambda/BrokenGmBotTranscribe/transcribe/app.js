@@ -4,7 +4,7 @@ import {
 	GetObjectCommand,
     DeleteObjectCommand,
 } from "@aws-sdk/client-s3";
-import { SQSClient, SendMessageCommand } from "@aws-sdk/client-sqs"
+import { SQSClient, SendMessageCommand, SendMessageBatchCommand } from "@aws-sdk/client-sqs"
 import fetch from "node-fetch";
 import FormData from "form-data";
 
@@ -65,22 +65,69 @@ export const lambdaHandler = async (event, context) => {
                 transcript.text.toLowerCase() !== 'you' && 
                 transcript.text.toLowerCase() !== 'you.' &&
                 transcript.text.toLowerCase() !== 'bye' &&
-                transcript.text.toLowerCase() !== 'bye.'
+                transcript.text.toLowerCase() !== 'bye.' && 
+                transcript.text !== 'MBC 뉴스 김재경입니다.' &&
+                transcript.text !== 'MBC 뉴스 김재경입니다'
             ) {
                 const sqsClient = new SQSClient({
                     region: "us-west-2",
                 });
 
-                const commandToSqs = new SendMessageCommand({
+                const id = bucketKeySplitAtPipes[3]
+                const attributes = JSON.stringify({
+                    discordId: bucketKeySplitAtPipes[2],
+                    username: bucketKeySplitAtPipes[0],
+                    text: transcript.text,
+                    timeStamp: bucketKeySplitAtPipes[1]
+                })
+
+                console.log(bucketKeySplitAtPipes)
+
+                // const commandToSqs = new SendMessageCommand({
+                //     QueueUrl: process.env.SQS_URL,
+                //     MessageBody: JSON.stringify({ 
+                //         text: transcript.text,
+                //         userName: bucketKeySplitAtPipes[0],
+                //         time: bucketKeySplitAtPipes[1],
+                //         guildId: bucketKeySplitAtPipes[4],
+                //         campaignName: bucketKeySplitAtPipes[5].split("%2B").join(" "),
+                //         sessionNumber: bucketKeySplitAtPipes[6].split('.')[0],
+                //     })
+                // });
+                const commandToSqs = new SendMessageBatchCommand({
                     QueueUrl: process.env.SQS_URL,
-                    MessageBody: JSON.stringify({ 
-                        text: transcript.text,
-                        userName: bucketKeySplitAtPipes[0],
-                        time: bucketKeySplitAtPipes[1],
-                        guildId: bucketKeySplitAtPipes[4],
-                        campaignName: bucketKeySplitAtPipes[5].split("%2B").join(" "),
-                        sessionNumber: bucketKeySplitAtPipes[6].split('.')[0],
-                    })
+                    Entries: [
+                        {
+                            Id: `${id}-a`,
+                            MessageBody: JSON.stringify({ 
+                                "PK": "entry",
+                                "SK": id,
+                                "id": `entry_${id}`,
+                                "type": "entry",
+                                "attributes": attributes
+                            })
+                        },
+                        {
+                            Id: `${id}-b`,
+                            MessageBody: JSON.stringify({ 
+                                "PK": `session#${bucketKeySplitAtPipes[4].replace('.wav','')}`,
+                                "SK": `entry#${id}`,
+                                "id": `entry_${id}`,
+                                "type": "entry",
+                                "attributes": attributes
+                            })
+                        },
+                        {
+                            Id: `${id}-c`,
+                            MessageBody: JSON.stringify({ 
+                                "PK": `session#${bucketKeySplitAtPipes[4].replace('.wav','')}`,
+                                "SK": `${bucketKeySplitAtPipes[1]}#entry#${id}`,
+                                "id": `entry_${id}`,
+                                "type": "entry",
+                                "attributes": attributes
+                            })
+                        }
+                    ]
                 });
                 await sqsClient.send(commandToSqs);
             }

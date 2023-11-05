@@ -1,0 +1,12 @@
+{
+  "name": "voices",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "dependencies": {
+    "dotenv": "^16.0.2",
+    "@aws-sdk/client-dynamodb": "^3.421.0",
+    "@aws-sdk/lib-dynamodb": "^3.421.0"
+  }
+}
